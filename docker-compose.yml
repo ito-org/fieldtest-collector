@@ -1,0 +1,38 @@
+# https://docs.docker.com/compose/compose-file/
+version: "3"
+
+services:
+  influxdb:
+    image: quay.io/influxdb/influxdb:2.0.0-beta
+    ports:
+      - "9999:9999"
+    volumes:
+      # Mount influx data and auth config
+      - "./influxdb/data:/root/.influxdbv2"
+    environment:
+      - INFLUXDB_ORGANIZATION
+      - INFLUXDB_BUCKET
+      - INFLUXDB_USERNAME
+      - INFLUXDB_PASSWORD
+      - INFLUXDB_RETENTION
+    networks:
+      my-network:
+
+  telegraf:
+    build: .
+    image: telegraf
+    depends_on:
+      - influxdb
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT
+      - INFLUXDB_URL
+      - INFLUXDB_ORGANIZATION
+      - INFLUXDB_BUCKET
+      - INFLUXDB_TOKEN
+    networks:
+      my-network:
+
+networks:
+  my-network:

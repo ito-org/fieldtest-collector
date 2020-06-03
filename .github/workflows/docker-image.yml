@@ -1,0 +1,29 @@
+# https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions
+name: Docker image
+
+on:
+  - push
+
+jobs:
+  push:
+    name: Push
+    # Only run on tags
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      # REPOSITORY_NAME will be used as docker image name
+      - name: Parse repository name
+        run: echo ::set-env name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')
+        shell: bash
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Push docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          # GITHUB_TOKEN is predefined (https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token)
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: ${{ github.repository }}/${{ env.REPOSITORY_NAME }}
+          tag_with_ref: true
+          tags: latest

@@ -1,5 +1,7 @@
 # fieldtest-collector
 
+**THIS SERVER COMPONENT IS ONLY INTENDED FOR LAB ENVIRONMENTS.**
+
 This repository contains a server configuration, that can process HTTP POSTs with CSV sensor data and store it in an InfluxDB database:
 
 ```

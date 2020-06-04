@@ -44,7 +44,7 @@ InfluxDB will persist its data in `influxdb/data`. It can be cleaned with `rm -r
 
 # Ingesting data
 
-This will send an HTTP POST to telegraf with some payload CSV data. The first CSV line is expected to contain the column names.
+This will send an HTTP POST to telegraf with some payload CSV data. The first CSV line is expected to contain the column names:
 
 ```sh
 curl -XPOST --header 'Content-Type: text/csv' http://localhost:8080/telegraf -d 'col1,col2,timestamp,value
@@ -56,3 +56,7 @@ curl -XPOST --header 'Content-Type: text/csv' http://localhost:8080/telegraf -d 
 "world","106",1591216476,"12.4"
 "world","107",1591216576,"9.7"'
 ```
+
+The data will be stored in InfluxDB. It can be queried using the InfluxDB UI:
+
+![img](./influx-screenshot.png)
